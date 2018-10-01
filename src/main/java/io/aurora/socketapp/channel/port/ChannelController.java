@@ -50,15 +50,15 @@ public class ChannelController
     @MessageMapping("/channels/join")
     public void join(String channelId, Principal principal) throws IOException
     {
-        channelService.join(channelService.findChannelById(channelId)
-                       ,mapper.readValue(principal.getName(),User.class));
+        channelService.join(channelId
+                       ,mapper.readValue(principal.getName(),User.class).getId());
     }
 
     @MessageMapping("/channels/leave")
     public void leave(String channelId, Principal principal) throws IOException
     {
-        channelService.leave(channelService.findChannelById(channelId),
-                mapper.readValue(principal.getName(),User.class));
+        channelService.leave(channelId,
+                mapper.readValue(principal.getName(),User.class).getId());
     }
 
     @RequestMapping("/channels")

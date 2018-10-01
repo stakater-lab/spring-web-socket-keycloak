@@ -32,14 +32,14 @@ public class SubChannelController
     @MessageMapping("/subchannels/join")
     public void join(String subChannelId, Principal principal) throws IOException
     {
-        subChannelService.join(subChannelService.findSubChannelById(subChannelId)
-                ,mapper.readValue(principal.getName(), User.class));
+        subChannelService.join(subChannelId
+                ,mapper.readValue(principal.getName(), User.class).getId());
     }
 
     @MessageMapping("/subchannels/leave")
     public void leave(String subChannelId, Principal principal) throws IOException
     {
-        subChannelService.leave(subChannelService.findSubChannelById(subChannelId),
-                mapper.readValue(principal.getName(),User.class));
+        subChannelService.leave(subChannelId,
+                mapper.readValue(principal.getName(),User.class).getId());
     }
 }
