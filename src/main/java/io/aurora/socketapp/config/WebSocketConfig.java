@@ -54,13 +54,14 @@ public class WebSocketConfig
     public void configureMessageBroker(MessageBrokerRegistry registry)
     {
         registry
-                .enableSimpleBroker("/queue/", "/topic/");
-                /*
+                //.enableSimpleBroker("/queue/", "/topic/");
+
                 .enableStompBrokerRelay("/queue/", "/topic/")
                 .setUserDestinationBroadcast("/topic/unresolved.user.dest")
                 .setUserRegistryBroadcast("/topic/registry.broadcast")
                 .setRelayHost(relayHost)
-                .setRelayPort(relayPort);*/
+                .setRelayPort(relayPort);
+        registry.setApplicationDestinationPrefixes("/app");
     }
 
     @Override
