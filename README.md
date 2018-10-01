@@ -10,7 +10,9 @@ Tools:
 <li>STOMP
 <li>Keycloak
 </ul>
+
 How to run:
+
 <ul>
 <li>Clone and build java project
 
