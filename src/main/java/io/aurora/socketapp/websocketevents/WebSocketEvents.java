@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.aurora.socketapp.channel.domain.User;
 import io.aurora.socketapp.channel.repository.UserRepository;
 import io.aurora.socketapp.channel.service.ChannelService;
+import io.aurora.socketapp.channel.service.SubChannelService;
 import io.aurora.socketapp.channel.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
@@ -23,16 +24,24 @@ public class WebSocketEvents
 {
 	@Autowired
 	private UserService userService;
+
 	private UserRepository userRepository;
+
 	SimpMessageSendingOperations messagingTemplate;
+
+	private ChannelService channelService;
+
+	private SubChannelService subChannelService;
 
 
 	public WebSocketEvents(UserService userService, UserRepository userRepository,
-						   SimpMessageSendingOperations messagingTemplate)
+						   SimpMessageSendingOperations messagingTemplate, ChannelService channelService, SubChannelService subChannelService)
 	{
 		this.userService = userService;
 		this.userRepository = userRepository;
 		this.messagingTemplate = messagingTemplate;
+		this.channelService = channelService;
+		this.subChannelService = subChannelService;
 	}
 
 	@EventListener
@@ -66,10 +75,7 @@ public class WebSocketEvents
 			userObject = userObject.toBuilder().sessionIds(sessionIds).online(true).build();
 			userRepository.save(userObject);
 		}
-		System.out.print(user.getName() + " Connected");
-		//TODO: Send request to all joined channels and sub channel
-		messagingTemplate.convertAndSend("/topic/",
-				userService.findAllOnlineUsers(true));
+		//TODO: Send request to all joined channels and sub channels if needed
 
 	}
 
@@ -85,22 +91,24 @@ public class WebSocketEvents
 		{
 			//Set User Offline and remove from every Channel
 			user = user.toBuilder().online(false).build();
-			//TODO: Ask sir to remove user from Channels & Subchannels or not
-			/*
+
+			//Remove channel and subchannels from user and vice versa
 			for (String channelId:user.getChannels())
 			{
 				channelService.removeUserFromChannel(channelId,user.getId());
 			}
-			*/
+			for (String subChannelId:user.getSubChannels())
+			{
+				subChannelService.removeUserFromSubChannel(subChannelId,user.getId());
+			}
+
+			user = user.toBuilder().subChannels(new ArrayList()).channels(new ArrayList()).build();
 
             List<String> sessionIds = user.getSessionIds();
 			sessionIds.remove(sessionId);
  			user = user.toBuilder().channels(new ArrayList()).sessionIds(sessionIds).build();
 			userRepository.save(user);
-
-			//messagingTemplate.convertAndSend("/topic/",
-			//		userService.findAllOnlineUsers(true));
-			System.out.print(user.getName() + " Disconnected");
 		});
+		//TODO: Send request to all joined channels and sub channels if needed
 	}
 }
