@@ -3,11 +3,12 @@
 <h3>A sample Application of Websockets, Hazelcast, and Keycloak in Spring.</h4>
 
 Tools:
-Spring Boot 2.0.4
-Hazelcast 3.9.4
-Websockets with SockJs
-STOMP
-Keycloak
+<ul>
+<li>Spring Boot 2.0.4
+<li>Hazelcast 3.9.4
+<li>Websockets with SockJs
+<li>STOMP
+<li>Keycloak
 
 How to run:
 <ul>
