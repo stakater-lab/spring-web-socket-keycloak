@@ -51,6 +51,11 @@ public class SubChannelServiceImpl implements SubChannelService
         }
         //Add channel for user
         List<String> subChannelIds = user.getSubChannels();
+        if (subChannelIds.contains(subChannel.getId()) || (getUserIndex(user,subChannel.getUsers()) != -1))
+        {
+            updateConnectedUsersViaWebSocket(subChannel);
+            return subChannel;
+        }
         subChannelIds.add(subChannel.getId());
         user = user.toBuilder().subChannels(subChannelIds).build();
         userRepository.save(user);
@@ -89,6 +94,18 @@ public class SubChannelServiceImpl implements SubChannelService
         return subChannel;
     }
 
+    @Override
+    public void removeUserFromSubChannel(String subChannelId, String userId)
+    {
+        //Remove user in SubChannel
+        SubChannel subChannel = subChannelRepository.findById(subChannelId).get();
+        List<User> users = subChannel.getUsers();
+        int index = getUserIndex(userRepository.findById(userId).get(),users);
+        users.remove(index);
+        subChannel = subChannel.toBuilder().users(users).build();
+        subChannelRepository.save(subChannel);
+    }
+
     private int getUserIndex(User user, List<User> users)
     {
         for (User existingUser:users)
@@ -108,8 +125,8 @@ public class SubChannelServiceImpl implements SubChannelService
         subChannelRepository
                 .findAll()
                 .iterator()
-                .forEachRemaining(channel->
-                        subChannels.add(channel)
+                .forEachRemaining(subChannel->
+                        subChannels.add(subChannel)
                 );
         return subChannels;
     }
