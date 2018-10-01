@@ -22,21 +22,21 @@ public class SubChannelController
         this.subChannelService = subChannelService;
     }
 
-    @MessageMapping("/available.subChannels")
-    @SendTo("/topic/channels")
+    @MessageMapping("/available.subshannels")
+    @SendTo("/topic/subchannels")
     public List<String> getAllChannelIds()
     {
         return subChannelService.getAllSubChannelIds();
     }
 
-    @MessageMapping("/subChannels/join")
+    @MessageMapping("/subchannels/join")
     public void join(String subChannelId, Principal principal) throws IOException
     {
         subChannelService.join(subChannelService.findSubChannelById(subChannelId)
                 ,mapper.readValue(principal.getName(), User.class));
     }
 
-    @MessageMapping("/subChannels/leave")
+    @MessageMapping("/subchannels/leave")
     public void leave(String subChannelId, Principal principal) throws IOException
     {
         subChannelService.leave(subChannelService.findSubChannelById(subChannelId),
