@@ -1,6 +1,7 @@
 package io.aurora.socketapp.channel.service;
 
 import io.aurora.socketapp.channel.domain.Channel;
+import io.aurora.socketapp.channel.domain.SubChannel;
 import io.aurora.socketapp.channel.domain.User;
 import io.aurora.socketapp.channel.repository.ChannelRepository;
 import io.aurora.socketapp.channel.repository.UserRepository;
@@ -18,12 +19,14 @@ public class ChannelServiceImpl implements ChannelService
     private SimpMessagingTemplate simpMessagingTemplate;
     private final ChannelRepository channelRepository;
     private final UserRepository userRepository;
+    private final SubChannelService subChannelService;
 
 
-    public ChannelServiceImpl(ChannelRepository channelRepository, UserRepository userRepository)
+    public ChannelServiceImpl(ChannelRepository channelRepository, UserRepository userRepository, SubChannelService subChannelService)
     {
         this.channelRepository = channelRepository;
         this.userRepository = userRepository;
+        this.subChannelService = subChannelService;
     }
 
     @Autowired
@@ -81,6 +84,17 @@ public class ChannelServiceImpl implements ChannelService
         channelIds.remove(channel.getId());
         user = user.toBuilder().channels(channelIds).build();
         userRepository.save(user);
+        // Remove user from all the subchannels of this channel
+        for (String userSubChannelId:user.getSubChannels())
+        {
+            for (SubChannel subChannel:channel.getSubChannels())
+            {
+                if (subChannel.getId().equals(userSubChannelId))
+                {
+                    subChannelService.leave(subChannel,user);
+                }
+            }
+        }
         updateConnectedUsersViaWebSocket(channel);
         return channel;
     }
