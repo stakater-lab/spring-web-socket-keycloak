@@ -11,11 +11,9 @@ public interface SubChannelService
 
     void remove(SubChannel channel);
 
-    SubChannel join(SubChannel channel, User user);
+    SubChannel join(String channelId, String userId);
 
-    SubChannel leave(SubChannel channel, User user);
-
-    void removeUserFromSubChannel(String subChannelId,String userId);
+    SubChannel leave(String channelId, String userId);
 
     List<SubChannel> getAllSubChannels();
 

@@ -39,8 +39,10 @@ public class SubChannelServiceImpl implements SubChannelService
     }
 
     @Override
-    public SubChannel join(SubChannel subChannel, User user)
+    public SubChannel join(String subChannelId, String userId)
     {
+        User user = userRepository.findById(userId).get();
+        SubChannel subChannel = subChannelRepository.findById(subChannelId).get();
         //Check if user exist in channel
         user = userRepository.findById(user.getId()).get();
         if(!user.getChannels().contains(subChannel.getChannelId()))
@@ -70,8 +72,10 @@ public class SubChannelServiceImpl implements SubChannelService
     }
 
     @Override
-    public SubChannel leave(SubChannel subChannel, User user)
+    public SubChannel leave(String subChannelId, String userId)
     {
+        User user = userRepository.findById(userId).get();
+        SubChannel subChannel = subChannelRepository.findById(subChannelId).get();
         //Check if user exist in channel
         user = userRepository.findById(user.getId()).get();
         if(!user.getChannels().contains(subChannel.getChannelId()))
@@ -94,17 +98,6 @@ public class SubChannelServiceImpl implements SubChannelService
         return subChannel;
     }
 
-    @Override
-    public void removeUserFromSubChannel(String subChannelId, String userId)
-    {
-        //Remove user in SubChannel
-        SubChannel subChannel = subChannelRepository.findById(subChannelId).get();
-        List<User> users = subChannel.getUsers();
-        int index = getUserIndex(userRepository.findById(userId).get(),users);
-        users.remove(index);
-        subChannel = subChannel.toBuilder().users(users).build();
-        subChannelRepository.save(subChannel);
-    }
 
     private int getUserIndex(User user, List<User> users)
     {

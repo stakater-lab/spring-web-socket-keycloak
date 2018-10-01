@@ -47,8 +47,10 @@ public class ChannelServiceImpl implements ChannelService
     }
 
     @Override
-    public Channel join(Channel channel, User user)
+    public Channel join(String channelId, String userId)
     {
+        User user = userRepository.findById(userId).get();
+        Channel channel = channelRepository.findById(channelId).get();
         //Add channel for user
         List<String> channelIds = user.getChannels();
         if (channelIds.contains(channel.getId()) || (getUserIndex(user,channel.getUsers()) != -1))
@@ -70,8 +72,10 @@ public class ChannelServiceImpl implements ChannelService
     }
 
     @Override
-    public Channel leave(Channel channel, User user)
+    public Channel leave(String channelId, String userId)
     {
+        User user = userRepository.findById(userId).get();
+        Channel channel = channelRepository.findById(channelId).get();
         //Remove user in Channel
         List<User> users = channel.getUsers();
         int index = getUserIndex(user,users);
@@ -87,11 +91,11 @@ public class ChannelServiceImpl implements ChannelService
         // Remove user from all the subchannels of this channel
         for (String userSubChannelId:user.getSubChannels())
         {
-            for (SubChannel subChannel:channel.getSubChannels())
+            for (SubChannel subChannel1:channel.getSubChannels())
             {
-                if (subChannel.getId().equals(userSubChannelId))
+                if (subChannel1.getId().equals(userSubChannelId))
                 {
-                    subChannelService.leave(subChannel,user);
+                    subChannelService.leave(subChannel1.getId(),user.getId());
                 }
             }
         }
@@ -143,17 +147,6 @@ public class ChannelServiceImpl implements ChannelService
          return  channelRepository.findById(channelId).get();
     }
 
-    @Override
-    public void removeUserFromChannel(String channelId, String userId)
-    {
-        //Remove user in Channel
-        Channel channel = channelRepository.findById(channelId).get();
-        List<User> users = channel.getUsers();
-        int index = getUserIndex(userRepository.findById(userId).get(),users);
-        users.remove(index);
-        channel = channel.toBuilder().users(users).build();
-        channelRepository.save(channel);
-    }
 
     @Override
     public List<User> findChannelOnlineUser(String channelId)
