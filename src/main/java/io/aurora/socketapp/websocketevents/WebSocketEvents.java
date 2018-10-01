@@ -82,6 +82,7 @@ public class WebSocketEvents
 	@EventListener
 	private void handleSessionDisconnect(SessionDisconnectEvent event)
 	{
+
 		String sessionId = event.getSessionId();
 		if (sessionId == null)
 		{
@@ -91,15 +92,10 @@ public class WebSocketEvents
 		{
 			//Set User Offline and remove from every Channel
 			user = user.toBuilder().online(false).build();
-
 			//Remove channel and subchannels from user and vice versa
 			for (String channelId:user.getChannels())
 			{
-				channelService.removeUserFromChannel(channelId,user.getId());
-			}
-			for (String subChannelId:user.getSubChannels())
-			{
-				subChannelService.removeUserFromSubChannel(subChannelId,user.getId());
+				channelService.leave(channelId,user.getId());
 			}
 
 			user = user.toBuilder().subChannels(new ArrayList()).channels(new ArrayList()).build();
