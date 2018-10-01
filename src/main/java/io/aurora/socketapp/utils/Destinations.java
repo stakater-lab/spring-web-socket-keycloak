@@ -15,7 +15,7 @@ public class Destinations
 		}
 		
 		public static String connectedUsers(String channelId) {
-			return "/topic/" + channelId + "/connected.users";
+			return "/topic/" + channelId + ".connected.users";
 		}
 	}
 
@@ -23,16 +23,16 @@ public class Destinations
 	{
 
 		public static String publicMessages(String channelId) {
-			return "/topic/subchannel/" + channelId;
+			return "/topic/subchannel." + channelId;
 		}
 
 		public static String privateMessages(String channelId) {
-			return "/queue/subchannel/" + channelId;
+			return "/queue/subchannel." + channelId;
 		}
 
 		public static String connectedUsers(String channelId)
 		{
-			return "/topic/subchannel/" + channelId + "/connected.users";
+			return "/topic/subchannel." + channelId + ".connected.users";
 		}
 	}
 }
