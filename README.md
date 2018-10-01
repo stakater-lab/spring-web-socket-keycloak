@@ -11,21 +11,21 @@ Keycloak
 
 How to run:
 <ul>
-<li>Clone and build java project<\li>
+<li>Clone and build java project
 
-<li>git clone https://github.com/stakater-lab/spring-web-socket-keycloak.git<\li>
+<li>git clone https://github.com/stakater-lab/spring-web-socket-keycloak.git
 
-<li>cd spring-web-socket-keycloak<\li>
+<li>cd spring-web-socket-keycloak
 
-<li>mvn clean package<\li>
+<li>mvn clean package
 
-<li>Change the keycloak , Stomp Relay configuration <\li>
+<li>Change the keycloak , Stomp Relay configuration 
 
-<li>Run spring boot Apllication<\li>
+<li>Run spring boot Apllication
 
-<li>Apllication will starts on localhost:9002<\li>
+<li>Apllication will starts on localhost:9002
 
-<li>Connect to the websocket using "/ws" Endpoint.<\li>
+<li>Connect to the websocket using "/ws" Endpoint
 
-<li>Send bearer token from keycloak with connect message.<\li>
+<li>Send bearer token from keycloak with connect message
 </ul>
