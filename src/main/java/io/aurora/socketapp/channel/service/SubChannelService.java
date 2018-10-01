@@ -15,6 +15,8 @@ public interface SubChannelService
 
     SubChannel leave(SubChannel channel, User user);
 
+    void removeUserFromSubChannel(String subChannelId,String userId);
+
     List<SubChannel> getAllSubChannels();
 
     List<String> getAllSubChannelIds();
