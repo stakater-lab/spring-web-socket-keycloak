@@ -1,36 +1,31 @@
 package io.aurora.socketapp.config;
 
-import com.hazelcast.config.Config;
-import com.hazelcast.config.MapAttributeConfig;
-import com.hazelcast.config.MapIndexConfig;
-import com.hazelcast.core.Hazelcast;
+import com.hazelcast.client.HazelcastClient;
+import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.core.HazelcastInstance;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.session.hazelcast.HazelcastSessionRepository;
-import org.springframework.session.hazelcast.PrincipalNameExtractor;
-import org.springframework.session.hazelcast.config.annotation.web.http.EnableHazelcastHttpSession;
+import org.springframework.core.env.Environment;
 
 @Configuration
 public class HazelcastSessionConfig
 {
+    private Environment environment;
 
-    @Bean
-    public HazelcastInstance hazelcastInstance()
+    public HazelcastSessionConfig(Environment environment)
     {
-        MapAttributeConfig attributeConfig = new MapAttributeConfig()
-                .setName(HazelcastSessionRepository.PRINCIPAL_NAME_ATTRIBUTE)
-                .setExtractor(PrincipalNameExtractor.class.getName());
-
-        Config config = new Config();
-
-        config.getMapConfig(HazelcastSessionRepository.DEFAULT_SESSION_MAP_NAME)
-                .addMapAttributeConfig(attributeConfig)
-                .addMapIndexConfig(new MapIndexConfig(
-                        HazelcastSessionRepository.PRINCIPAL_NAME_ATTRIBUTE, false));
-
-        return Hazelcast.newHazelcastInstance(config);
+        this.environment = environment;
     }
 
+    @Bean
+    public HazelcastInstance hazelcastInstance() {
+        ClientConfig clientConfig = new ClientConfig();
+        clientConfig.getNetworkConfig().addAddress(environment.getProperty("HAZELCAST_URL"));
+        clientConfig.getNetworkConfig().setConnectionAttemptLimit(10);
+        clientConfig.getNetworkConfig().setConnectionAttemptPeriod(24 * 60);
+        clientConfig.getNetworkConfig().setConnectionTimeout(1000);
+        HazelcastInstance hazelcastInstance = HazelcastClient.newHazelcastClient(clientConfig);
+        return hazelcastInstance;
+    }
 
 }
