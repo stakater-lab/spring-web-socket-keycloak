@@ -18,7 +18,8 @@ public class HazelcastSessionConfig
     }
 
     @Bean
-    public HazelcastInstance hazelcastInstance() {
+    public HazelcastInstance hazelcastInstance()
+    {
         ClientConfig clientConfig = new ClientConfig();
         clientConfig.getNetworkConfig().addAddress(environment.getProperty("HAZELCAST_URL"));
         clientConfig.getNetworkConfig().setConnectionAttemptLimit(10);
