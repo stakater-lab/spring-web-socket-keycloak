@@ -76,15 +76,21 @@ public class SubChannelServiceImpl implements SubChannelService
     {
         User user = userRepository.findById(userId).get();
         SubChannel subChannel = subChannelRepository.findById(subChannelId).get();
+
         //Check if user exist in channel
         user = userRepository.findById(user.getId()).get();
         if(!user.getChannels().contains(subChannel.getChannelId()))
         {
             return null;
         }
-        //Remove user in Channel
+
+        //Remove user in SubChannel
         List<User> users = subChannel.getUsers();
         int index = getUserIndex(user,users);
+        if(index==-1)
+        {
+            return null;
+        }
         users.remove(index);
         subChannel = subChannel.toBuilder().users(users).build();
         subChannelRepository.save(subChannel);

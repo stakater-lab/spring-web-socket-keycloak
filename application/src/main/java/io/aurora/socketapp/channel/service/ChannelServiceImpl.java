@@ -51,6 +51,7 @@ public class ChannelServiceImpl implements ChannelService
     {
         User user = userRepository.findById(userId).get();
         Channel channel = channelRepository.findById(channelId).get();
+
         //Add channel for user
         List<String> channelIds = user.getChannels();
         if (channelIds.contains(channel.getId()) || (getUserIndex(user,channel.getUsers()) != -1))
@@ -76,6 +77,18 @@ public class ChannelServiceImpl implements ChannelService
     {
         User user = userRepository.findById(userId).get();
         Channel channel = channelRepository.findById(channelId).get();
+        // Remove user from all the subchannels of this channel
+        for (String userSubChannelId:user.getSubChannels())
+        {
+            for (SubChannel subChannel1:channel.getSubChannels())
+            {
+                System.out.print(channel.getSubChannels());
+                if (subChannel1.getId().equals(userSubChannelId))
+                {
+                    subChannelService.leave(subChannel1.getId(),user.getId());
+                }
+            }
+        }
         //Remove user in Channel
         List<User> users = channel.getUsers();
         int index = getUserIndex(user,users);
@@ -88,17 +101,7 @@ public class ChannelServiceImpl implements ChannelService
         channelIds.remove(channel.getId());
         user = user.toBuilder().channels(channelIds).build();
         userRepository.save(user);
-        // Remove user from all the subchannels of this channel
-        for (String userSubChannelId:user.getSubChannels())
-        {
-            for (SubChannel subChannel1:channel.getSubChannels())
-            {
-                if (subChannel1.getId().equals(userSubChannelId))
-                {
-                    subChannelService.leave(subChannel1.getId(),user.getId());
-                }
-            }
-        }
+
         updateConnectedUsersViaWebSocket(channel);
         return channel;
     }
