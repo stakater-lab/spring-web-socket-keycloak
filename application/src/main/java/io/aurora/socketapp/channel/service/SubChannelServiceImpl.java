@@ -87,7 +87,7 @@ public class SubChannelServiceImpl implements SubChannelService
         //Remove user in SubChannel
         List<User> users = subChannel.getUsers();
         int index = getUserIndex(user,users);
-        if(index==-1)
+        if(index == -1)
         {
             return null;
         }
