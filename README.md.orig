@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+# spring-web-socket-keycloak
+Repository to contain sample websocket with keycloak
+=======
 <h1>Spring Web Socket KeyCloak</h1>
 
 <h3>A sample Application of Websockets, Hazelcast, and Keycloak in Spring.</h4>
@@ -32,3 +36,4 @@ How to run:
 
 <li>Send bearer token from keycloak with connect message
 </ul>
+>>>>>>> 35f439057537cd88538f3a1061f3d75815c0b161

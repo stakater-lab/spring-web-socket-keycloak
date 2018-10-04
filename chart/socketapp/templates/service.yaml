@@ -1,0 +1,16 @@
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+{{ include "spring-web-socket-keycloak.labels.stakater" . | indent 4 }}
+{{ include "spring-web-socket-keycloak.labels.chart" . | indent 4 }}
+    k8sapp: spring-web-socket-keycloak   # label used by servicemonitor to monitor this service
+  name: {{ template "spring-web-socket-keycloak.name" . }}
+spec:
+  selector:
+{{ toYaml .Values.deployment.podLabels | indent 4 }}
+  ports:
+  - name: web
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
