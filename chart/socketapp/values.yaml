@@ -1,0 +1,22 @@
+labels:
+  group: com.stakater.platform
+  provider: stakater
+  version: 1.0.0
+deployment:
+  replicas: 1
+  podLabels:      
+    app: spring-web-socket-keycloak
+  container:
+    name: spring-web-socket-keycloak
+    image: REPLACE_ME_IMAGE_NAME
+    probes:
+      readinessProbe:
+        httpGet:
+          path: /REPLACE_ME_HEALTH_ENDPOINT
+          port: 8080
+        initialDelaySeconds: 20
+      livenessProbe:
+        httpGet:
+          path: /REPLACE_ME_HEALTH_ENDPOINT
+          port: 8080
+        initialDelaySeconds: 20

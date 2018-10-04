@@ -1,0 +1,22 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  labels:
+{{ include "spring-web-socket-keycloak.labels.stakater" . | indent 4 }}
+{{ include "spring-web-socket-keycloak.labels.chart" . | indent 4 }}
+  name: {{ template "spring-web-socket-keycloak.name" . }}
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  template:
+    metadata:
+      labels:
+{{ toYaml .Values.deployment.podLabels | indent 8 }}
+    spec:
+      containers:
+      - name: {{ .Values.deployment.container.name }}
+        image: {{ .Values.deployment.container.image | quote }}
+        {{- with .Values.deployment.container.probes }}
+{{ toYaml .Values.deployment.container.probes | indent 8 }}
+        {{- end }}
+        ports:
+        - containerPort: 8080

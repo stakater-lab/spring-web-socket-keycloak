@@ -1,0 +1,12 @@
+apiVersion: v1
+name: spring-web-socket-keycloak
+description: A sample Application of Websockets, Hazelcast, and Keycloak in Spring.
+version: 1.0.0
+keywords:
+  - stakater
+  - java
+  - maven
+home: https://github.com/stakater-lab/spring-web-socket-keycloak
+maintainers:
+- name: Stakater
+  email: stakater@aurorasolutions.io
