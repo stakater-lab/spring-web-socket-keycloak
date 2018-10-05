@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: spring-web-socket-keycloak
+spec:
+  selector:
+  # This label is used by Service to connect to pod, 
+  # If you change it, so change in deployment's spec labels as well.
+    app: spring-web-socket-keycloak
+  ports:
+  - name: web
+    port: 8080
+    protocol: TCP
+    targetPort: 8080

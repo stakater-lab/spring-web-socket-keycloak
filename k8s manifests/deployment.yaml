@@ -1,0 +1,31 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: spring-web-socket-keycloak
+  labels:     
+    provider: stakater
+    version: "1.0.0"
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+      # This label is used by Service to connect to pod, 
+      # If you change it, so change Service's labelSelector as well.
+        app: spring-web-socket-keycloak
+    spec:
+      containers:
+      - name: spring-web-socket-keycloak
+        image: "REPLACE_ME_APP_IMAGE"
+        readinessProbe:
+          httpGet:
+            path: /REPLACE_ME_HEALTH_ENDPOINT
+            port: 8080
+          initialDelaySeconds: 20
+        livenessProbe:
+          httpGet:
+            path: /REPLACE_ME_HEALTH_ENDPOINT
+            port: 8080
+          initialDelaySeconds: 20
+        ports:
+        - containerPort: 8080
